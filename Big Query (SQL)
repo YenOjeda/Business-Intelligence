@@ -1,0 +1,94 @@
+# identificacion de nulos
+
+SELECT
+COUNTIF(id IS NULL) AS id_null,
+COUNTIF(host_id IS NULL) AS host_id_null,
+COUNTIF(price IS NULL) AS price_null,
+COUNTIF(number_of_reviews IS NULL) AS number_of_reviews_null,
+COUNTIF(last_review IS NULL) AS  last_review_null,
+COUNTIF(reviews_per_month IS NULL) AS reviews_per_month_null,
+COUNTIF(calculated_host_listings_count IS NULL) AS calculated_host_listings_count_null,
+COUNTIF(availability_365 IS NULL) AS availability_365_null,
+FROM `bi-airbnb.bi.reviews_clean`
+
+# identificación de duplicados
+
+SELECT
+COUNT(*)-COUNT(DISTINCT id) AS id_duplicado,
+COUNT(*)-COUNT(DISTINCT name) AS name_duplicado,
+COUNT(*)-COUNT(DISTINCT neighbourhood) AS neighbourhood_duplicado,
+COUNT(*)-COUNT(DISTINCT neighbourhood_group) AS neighbourhood_group_duplicado,
+COUNT(*)-COUNT(DISTINCT latitude) AS latitude_duplicado,
+COUNT(*)-COUNT(DISTINCT longitude) AS longitude_duplicado,
+COUNT(*)-COUNT(DISTINCT room_type) AS room_type_duplicado,
+COUNT(*)-COUNT(DISTINCT minimum_nights) AS minimum_nights,
+ FROM `bi-airbnb.bi.rooms` 
+
+# eliminacion de duplicados
+
+WITH deduplicated_table AS (
+  SELECT
+    *,
+    ROW_NUMBER() OVER (PARTITION BY hostid ORDER BY (hostid)) as row_num
+  FROM
+    bi-airbnb.bi.hosts
+)
+SELECT *
+FROM deduplicated_table
+WHERE row_num = 1;
+
+# limpieza de datos alfanuméricos
+
+SELECT *
+FROM `bi-airbnb.bi.rooms_clean`
+WHERE NOT REGEXP_CONTAINS(id, r'^[0-9]+$');
+
+# view host limpia
+
+WITH deduplicate AS (
+    SELECT *,
+    ROW_NUMBER() OVER (PARTITION BY hostid ORDER BY hostid) AS row_num
+    FROM `bi-airbnb.bi.hosts`
+)
+SELECT hostid,COALESCE(CAST(hostname AS STRING), '0') AS hostname
+FROM deduplicate
+WHERE row_num = 1 AND REGEXP_CONTAINS(hostid,  r'^[0-9]+$')
+
+
+# view reviews limpia
+
+WITH deduplicate AS (
+  SELECT *,
+  ROW_NUMBER() OVER (PARTITION BY id ORDER BY id) AS row_num
+  FROM `bi-airbnb.bi.reviews` 
+)
+SELECT 
+  id,
+  host_id,
+  price,
+  number_of_reviews,
+  PARSE_DATE('%Y-%m-%d', last_review) AS last_review,
+  COALESCE(CAST(reviews_per_month AS STRING), '0') AS reviews_per_month,
+  calculated_host_listings_count,
+  availability_365
+FROM deduplicate
+WHERE row_num = 1 AND REGEXP_CONTAINS(id, r'^[0-9]+$');
+
+# view rooms limpia
+
+WITH deduplicated_table AS (
+  SELECT
+    *,
+    ROW_NUMBER() OVER (PARTITION BY id ORDER BY id) AS row
+  FROM
+    `bi-airbnb.bi.rooms`
+)
+
+SELECT
+  *,
+  CAST(longitude AS FLOAT64) AS longitude_decimal
+FROM
+  deduplicated_table
+WHERE
+  row = 1
+  AND REGEXP_CONTAINS(id, r'^[0-9]+$');
