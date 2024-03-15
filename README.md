@@ -39,3 +39,4 @@ En este proyecto relacione tablas en Power BI, trabaje con columnas calculadas, 
 - Power BI (Fórmulas DAX).
 - Google slides.
 - Loom.
+
