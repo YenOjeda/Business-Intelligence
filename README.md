@@ -26,7 +26,7 @@ En este proyecto relacione tablas en Power BI, trabaje con columnas calculadas, 
 - Cálculos a través de formulas DAX y cálculo de dimensiones en visual.
 - Presentación de resultados a través de un Storytelling.
 
-# Insides
+# Insights 
 
 - El barrio con mayor disponibilidad de habitaciones es Manhattan, seguida de Brooklyn, Queens, Bronx y Staten Island.
 - La habitación más costosa se encuentra en Manhattan ($10.000/noche).
