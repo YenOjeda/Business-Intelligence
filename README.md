@@ -18,7 +18,7 @@ Cálculo de:
 Dar recomendaciones para aumentar la ocupación y mejorar la atención de los huespedes.
 En este proyecto relacione tablas en Power BI, trabaje con columnas calculadas, fórmulas DAX y cree un panel utilizando visualizaciones avanzadas como mapas geográficos.
 
-# Proceso
+# Proceso del análisis
 
 - ETL: BigQuery (SQL).
 - Cambio de tipo de datos en PowerBI.
@@ -39,4 +39,7 @@ En este proyecto relacione tablas en Power BI, trabaje con columnas calculadas, 
 - Power BI (Fórmulas DAX).
 - Google slides.
 - Loom.
+
+# Dashboard
+## Airbnb New York / Dashboard using PowerBI![Airbnb NY](https://raw.githubusercontent.com/YenOjeda/Business-Intelligence/main/Airbnb%20Power%20BI-1.png)
 
